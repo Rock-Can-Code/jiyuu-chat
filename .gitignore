@@ -43,3 +43,4 @@ yarn-error.log*
 /playwright/*
 
 .vscode
+.package-lock.json
