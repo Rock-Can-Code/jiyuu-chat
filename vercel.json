@@ -1,4 +1,3 @@
 {
-    "installCommand": "npm install",
-    "buildCommand": "next build"
+    "installCommand": "npm install"
   }
