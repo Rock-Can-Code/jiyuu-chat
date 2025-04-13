@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { BotMessageSquare, Send } from 'lucide-react';
+import { BotMessageSquare } from 'lucide-react';
 import { CreateMLCEngine } from "@mlc-ai/web-llm";
 
 interface FormInputs {
@@ -18,7 +18,6 @@ function App() {
     handleSubmit,
     reset,
     watch,
-    formState: { errors },
   } = useForm<FormInputs>();
 
   const messageContent = watch('message');
