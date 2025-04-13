@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest",
+    "test:ci": "jest --coverage"
   },
   "dependencies": {
     "@mlc-ai/web-llm": "^0.2.78",
