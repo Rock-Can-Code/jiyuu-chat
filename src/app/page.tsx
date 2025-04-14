@@ -45,12 +45,16 @@ function App() {
       });
 
       // Verifica que la respuesta tiene la estructura esperada (me dio algun pete cuando no sabia que responder)
-      const aiMessage = response.choices[0].message?.content || 'No response';
+      const aiMessage = response.choices[0].message?.content.trim() || 'No response';
 
+      if(aiMessage){
       console.log('Response from AI:', response);
 
       // Añadir la respuesta de la IA al state
       setMessages(prev => [...prev, { role: 'assistant', content: aiMessage }]);
+      } else {
+        console.warn('AI returned an empty message. Skipping display.')
+      } 
     } catch (error) {
       console.error('Error with AI response:', error);
     }
@@ -58,17 +62,17 @@ function App() {
   useEffect(() => {
     const loadEngine = async () => {
       const SELECTED_MODEL = 'Llama-3.2-1B-Instruct-q4f32_1-MLC';
-      const e = await CreateMLCEngine(SELECTED_MODEL, {
+      const engine = await CreateMLCEngine(SELECTED_MODEL, {
         initProgressCallback: (info) => {
           console.log('Init progress:', info);
           setLoadingProgress(info); // Actualizar el progreso de carga
         },
       });
-      await e.reload; // Muy importante para que cargue el modelo
-      await e.resetChat; // Reinicia la conversación interna (No entendi muy bien para que sirve)
-      setEngine(e);
-      setLoadingProgress(null); // Limpiar el progreso una vez cargado
 
+      await engine.reload; // Muy importante para que cargue el modelo
+      await engine.resetChat; // Reinicia la conversación interna (No entendi muy bien para que sirve)
+      setEngine(engine);
+      setLoadingProgress(null); // Limpiar el progreso una vez cargado
       setShowReadyMessage(true);
       setTimeout(() => {
         setShowReadyMessage(false);
@@ -120,7 +124,10 @@ return (
         <div className="p-4 flex space-x-4">
           <div className="flex-1 relative">
             <textarea
-              {...register('message', { required: true })}
+              {...register('message', {
+                 required: true, 
+                 validate: (value) => value.trim().length > 0
+                })}
               className="w-full px-4 py-3 rounded-lg  border-[var(--color-button-border-in)] text-[var(--color-text)] bg-[var(--color-button-background-in)] focus:ring-2 focus:ring-[var(--color-button-border-primary-in)] focus:border-transparent resize-none h-[100px] transition duration-200 ease-in-out"
               placeholder="Type your message here..."
               onKeyDown={(e) => {
@@ -150,4 +157,5 @@ return (
 );
 
 }
+
 export default App;
