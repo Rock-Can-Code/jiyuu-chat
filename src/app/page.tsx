@@ -12,6 +12,7 @@ function App() {
   const [engine, setEngine] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [loadingProgress, setLoadingProgress] = useState<{ progress: number; text: string; timeElapsed: number } | null>(null); // Estado para el progreso de carga
+  const [loadError, setLoadError] = useState<string | null>(null);  // Estado para si falla la carga
   const [showReadyMessage, setShowReadyMessage] = useState(false); // Estado para controlar la visibilidad del mensaje
   const {
     register,
@@ -57,6 +58,7 @@ function App() {
   };
   useEffect(() => {
     const loadEngine = async () => {
+    try{  
       const SELECTED_MODEL = 'Llama-3.2-1B-Instruct-q4f32_1-MLC';
       const e = await CreateMLCEngine(SELECTED_MODEL, {
         initProgressCallback: (info) => {
@@ -73,6 +75,11 @@ function App() {
       setTimeout(() => {
         setShowReadyMessage(false);
       }, 1000);
+    
+    } catch (err) {
+      console.error('Error loading model:', err);
+      setLoadError('Ocurrió un error al cargar el modelo. Por favor, recarga la página.');
+    }
     };
 
     loadEngine();
@@ -87,7 +94,17 @@ return (
       <div className="p-6 h-[700px] md:h-[750px] overflow-y-auto ">
 
         {/* Mostrar progreso de carga */}
-        {loadingProgress ? (
+        {loadError ? (
+          <div className="p-3 text-center text-sm text-gray-700 border border-gray-300 bg-gray-100 rounded-md shadow-sm max-w-md mx-auto">
+            <p>{loadError}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-3 px-4 py-1 text-sm text-gray-700 bg-gray-200 border border-gray-300 rounded hover:bg-gray-300 transition"
+              >
+              Recargar página
+            </button>
+          </div>
+          ) : loadingProgress ? (
           <div className="p-4 text-center text-sm text-[var(--color-text)]">
             <p>Progress: {loadingProgress.progress * 100}%</p>
             <p>Status: {loadingProgress.text}</p>
