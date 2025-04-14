@@ -48,15 +48,24 @@ function App() {
       const aiMessage = response.choices[0].message?.content.trim() || 'No response';
 
       if(aiMessage){
-      console.log('Response from AI:', response);
+        console.log('Response from AI:', response);
 
-      // Añadir la respuesta de la IA al state
-      setMessages(prev => [...prev, { role: 'assistant', content: aiMessage }]);
+        // Añadir la respuesta de la IA al state
+        setMessages(prev => [...prev, { role: 'assistant', content: aiMessage }]);
       } else {
-        console.warn('AI returned an empty message. Skipping display.')
-      } 
+        console.warn('AI returned an empty message.');
+        throw new Error('Empty response from AI');
+      }
     } catch (error) {
       console.error('Error with AI response:', error);
+      setMessages(prev => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: '⚠️ Hubo un error al generar la respuesta. Inténtelo de nuevo.',
+          error: true,
+        },
+      ]);
     }
   };
   useEffect(() => {
