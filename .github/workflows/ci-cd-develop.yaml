@@ -11,12 +11,27 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  SonarQube:
+  Tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm run test
+  SonarQube:
+    runs-on: ubuntu-latest
+    needs: [Tests]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests with coverage
+        run: npm run test:ci
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
   Deploy-Preview:

@@ -1,7 +1,7 @@
-'use client'
+'use client';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Send } from 'lucide-react';
+import { BotMessageSquare } from 'lucide-react';
 import { CreateMLCEngine } from "@mlc-ai/web-llm";
 
 interface FormInputs {
@@ -11,12 +11,13 @@ interface FormInputs {
 function App() {
   const [engine, setEngine] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
+  const [loadingProgress, setLoadingProgress] = useState<{ progress: number; text: string; timeElapsed: number } | null>(null); // Estado para el progreso de carga
+  const [showReadyMessage, setShowReadyMessage] = useState(false); // Estado para controlar la visibilidad del mensaje
   const {
     register,
     handleSubmit,
     reset,
     watch,
-    formState: { errors },
   } = useForm<FormInputs>();
 
   const messageContent = watch('message');
@@ -54,70 +55,99 @@ function App() {
       console.error('Error with AI response:', error);
     }
   };
-
   useEffect(() => {
     const loadEngine = async () => {
-      const SELECTED_MODEL = 'Llama-3.2-1B-Instruct-q4f32_1-MLC'; //Selecciono el modelo a usar
+      const SELECTED_MODEL = 'Llama-3.2-1B-Instruct-q4f32_1-MLC';
       const e = await CreateMLCEngine(SELECTED_MODEL, {
-        initProgressCallback: (info) => console.log('Init progress:', info), // Para ver el progreso de carga del modelo
+        initProgressCallback: (info) => {
+          console.log('Init progress:', info);
+          setLoadingProgress(info); // Actualizar el progreso de carga
+        },
       });
       await e.reload; // Muy importante para que cargue el modelo
       await e.resetChat; // Reinicia la conversación interna (No entendi muy bien para que sirve)
       setEngine(e);
+      setLoadingProgress(null); // Limpiar el progreso una vez cargado
+
+      setShowReadyMessage(true);
+      setTimeout(() => {
+        setShowReadyMessage(false);
+      }, 1000);
     };
 
     loadEngine();
   }, []);
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-hidden">
-        <div className="h-[600px] bg-gray-50 p-6 overflow-y-auto">
-          <div className="flex flex-col space-y-4">
-            {messages.map((message, index) => (
-              <div key={index} className={`flex ${message.role === 'user' ? 'items-start' : 'items-end'} space-x-4`}>
-                <div className={`flex-shrink-0 w-10 h-10 rounded-full ${message.role === 'user' ? 'bg-blue-500' : 'bg-gray-500'} flex items-center justify-center`}>
-                  <span className="text-white font-semibold">{message.role === 'user' ? 'You' : 'AI'}</span>
-                </div>
-                <div className="flex-1">
-                  <div className={`rounded-lg p-4 ${message.role === 'user' ? 'bg-blue-100' : 'bg-gray-100'}`}>
-                    <p className="text-gray-800">{message.content}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Input Area */}
-        <form onSubmit={handleSubmit(onSubmit)} className="p-4 bg-white border-t">
-          <div className="flex space-x-4">
-            <div className="flex-1">
-              <textarea
-                {...register('message', { required: true })}
-                className="w-full px-4 text-black py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none h-[100px] transition duration-200 ease-in-out"
-                placeholder="Type your message here..."
-              />
-              {errors.message && (
-                <span className="text-red-500 text-sm">This field is required</span>
-              )}
+return (
+  <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--color-background)] text-[var(--color-text)]">
+    <div className="w-full max-w-4xl rounded-xl overflow-hidden ">
+
+      {/* Mensajes */}
+      <div className="p-6 h-[700px] md:h-[750px] overflow-y-auto ">
+
+        {/* Mostrar progreso de carga */}
+        {loadingProgress ? (
+          <div className="p-4 text-center text-sm text-[var(--color-text)]">
+            <p>Progress: {loadingProgress.progress * 100}%</p>
+            <p>Status: {loadingProgress.text}</p>
+            <p>Time Elapsed: {loadingProgress.timeElapsed.toFixed(2)} seconds</p>
+          </div>
+        ) : (
+          showReadyMessage && (
+            <div className="p-4 text-center text-lg text-[var(--color-text)] transition-opacity duration-1000 opacity-100">
+              <p>Go!</p>
             </div>
+          )
+        )}
+        <div className='flex flex-col space-y-4'>
+        {messages.map((message, index) => (
+          <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div className={`rounded-lg p-4 ${
+              message.role === 'user'
+                ? 'bg-[var(--color-button-background-out)]' // Aplicar estilo del usuario
+                : 'bg-[var(--color-button-background-in)]' // Aplicar estilo de la IA
+            }`}>
+              <p className="text-[var(--color-text)]">{message.content}</p>
+            </div>
+          </div>
+        ))}
+        </div>
+      </div>
+
+      {/* Input */}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="p-4 flex space-x-4">
+          <div className="flex-1 relative">
+            <textarea
+              {...register('message', { required: true })}
+              className="w-full px-4 py-3 rounded-lg  border-[var(--color-button-border-in)] text-[var(--color-text)] bg-[var(--color-button-background-in)] focus:ring-2 focus:ring-[var(--color-button-border-primary-in)] focus:border-transparent resize-none h-[100px] transition duration-200 ease-in-out"
+              placeholder="Type your message here..."
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault(); // Evitar el salto de línea
+                  handleSubmit(onSubmit)(); // Enviar el formulario
+                }
+              }}
+            />
             <button
               type="submit"
               disabled={!messageContent}
-              className={`flex items-center justify-center px-6 rounded-lg font-medium transition duration-200 ease-in-out ${
+              className={`flex absolute bottom-2 right-1 items-center justify-center h-10 w-10 rounded-full font-medium transition duration-200 ease-in-out border border-gray-400 ${
                 messageContent
-                  ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  ? 'bg-[var(--color-button-background-primary-in)] text-[var(--color-button-icon-primary-in)] hover:bg-opacity-90 border-[var(--color-button-border-primary-in)]'
+                  : 'bg-[var(--color-button-background-in)] text-gray-400 cursor-not-allowed border-[var(--color-button-border-in)]'
               }`}
             >
-              <Send className="w-5 h-5" />
-              <span className="ml-2">Send</span>
+              <BotMessageSquare className='w-5 h-5 text-gray-400'/>
             </button>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
+      
     </div>
-  );
+  </div>
+);
+
 }
 export default App;
