@@ -3,6 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { BotMessageSquare } from 'lucide-react';
 import { CreateMLCEngine } from "@mlc-ai/web-llm";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
+
 
 interface FormInputs {
   message: string;
@@ -48,7 +52,7 @@ function App() {
       const aiMessage = response.choices[0].message?.content.trim() || 'No response';
 
       if(aiMessage){
-        console.log('Response from AI:', response);
+        console.log('Response from AI:', aiMessage);
 
         // Añadir la respuesta de la IA al state
         setMessages(prev => [...prev, { role: 'assistant', content: aiMessage }]);
@@ -121,7 +125,14 @@ return (
                 ? 'bg-[var(--color-button-background-out)]' // Aplicar estilo del usuario
                 : 'bg-[var(--color-button-background-in)]' // Aplicar estilo de la IA
             }`}>
-              <p className="text-[var(--color-text)]">{message.content}</p>
+              {/* <p className="text-[var(--color-text)]">{message.content}</p> */}
+              <ReactMarkdown 
+                skipHtml={true}
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeHighlight]}>
+                {message.content}</ReactMarkdown>
+
+
             </div>
           </div>
         ))}
