@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { BotMessageSquare } from 'lucide-react';
+import { BotMessageSquare, RotateCcw } from 'lucide-react';
 import { CreateMLCEngine } from "@mlc-ai/web-llm";
 
 interface FormInputs {
@@ -108,14 +108,12 @@ return (
 
         {/* Mostrar progreso de carga */}
         {loadError ? (
-          <div className="p-3 text-center text-sm text-gray-700 border border-gray-300 bg-gray-100 rounded-md shadow-sm max-w-md mx-auto">
+          <div className="p-3 text-center text-sm text-[var(--color-text)] border border-[var(--color-button-border-out)] bg-[var(--color-button-background-in)] rounded-md shadow-sm max-w-md mx-auto">
             <p>{loadError}</p>
-            <button
-              onClick={() => window.location.reload()}
-              className="mt-3 px-4 py-1 text-sm text-gray-700 bg-gray-200 border border-gray-300 rounded hover:bg-gray-300 transition"
-              >
-              Recargar página
-            </button>
+            <div className="mt-4 flex flex-col items-center text-sm bg-[var(--color-button-background-in)]">
+              <p>Try to reload the page</p>
+              <RotateCcw onClick={() => window.location.reload()} className="cursor-pointer mt-2" />
+            </div>
           </div>
           ) : loadingProgress ? (
           <div className="p-4 text-center text-sm text-[var(--color-text)]">
@@ -177,7 +175,6 @@ return (
           </div>
         </div>
       </form>
-      
     </div>
   </div>
 );
