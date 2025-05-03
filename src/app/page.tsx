@@ -132,10 +132,10 @@ return (
                       const language = part.split('\n')[0] || 'javascript';
                       const code = part.split('\n').slice(1).join('\n');
                       return (
-                        <div key={i} className="relative group">
+                        <div key={i} className="relative">
                           <button
                             onClick={() => navigator.clipboard.writeText(code)}
-                            className="absolute top-2 right-2 p-1 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-700 rounded"
+                            className="absolute top-2 right-2 p-1 bg-gray-700 rounded cursor-pointer"
                             title="Copy code"
                           >
                             <Copy size={14} className="text-gray-300" />
@@ -143,7 +143,11 @@ return (
                           <SyntaxHighlighter
                             language={language}
                             style={atomDark}
-                            customStyle={{ margin: '0.5rem 0', borderRadius: '0.5rem' }}
+                            customStyle={{ 
+                              margin: '0.5rem 0',
+                              borderRadius: '0.5rem',
+                              paddingTop: '2rem'
+                            }}
                           >
                             {code}
                           </SyntaxHighlighter>
