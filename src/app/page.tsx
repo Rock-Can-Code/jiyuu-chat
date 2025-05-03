@@ -135,10 +135,11 @@ return (
                         <div key={i} className="relative">
                           <button
                             onClick={() => navigator.clipboard.writeText(code)}
-                            className="absolute top-2 right-2 p-1 bg-gray-700 rounded cursor-pointer"
+                            className="absolute top-2 right-2 flex items-center gap-1 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer px-2 py-1 transition-colors"
                             title="Copy code"
                           >
                             <Copy size={14} className="text-gray-300" />
+                            <span className="text-xs text-gray-300">Copy</span>
                           </button>
                           <SyntaxHighlighter
                             language={language}
