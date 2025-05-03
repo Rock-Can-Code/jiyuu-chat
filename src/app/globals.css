@@ -9,7 +9,7 @@
 
   --color-user-zone: #CFCFCF;
 
-  --color-user-bubble: #666666; /* light blue */
+  --color-user-bubble: #666666;
 
   --color-button-border-in: #4B4B4B;
   --color-button-background-in: #CFCFCF;
@@ -35,7 +35,7 @@
     --color-submenu-background: #303030;
     --color-text: #ECECEC;
 
-    --color-user-bubble: #666666; /* light blue */
+    --color-user-bubble: #666666;
 
     --color-user-zone: #303030;
 
@@ -56,7 +56,7 @@
   }
 }
 
-@theme inline {
+inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
