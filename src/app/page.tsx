@@ -5,10 +5,64 @@ import { BotMessageSquare, RotateCcw, Copy, Check } from 'lucide-react';
 import { CreateMLCEngine } from "@mlc-ai/web-llm";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import remarkGfm from 'remark-gfm';
+import ReactMarkdown, { Components } from 'react-markdown';
 
 interface FormInputs {
   message: string;
 }
+
+const MarkdownComponents: Components = {
+  h1: (props) => <h1 className="text-2xl font-bold my-2" {...props} />,
+  h2: (props) => <h2 className="text-xl font-bold my-2" {...props} />,
+  h3: (props) => <h3 className="text-lg font-bold my-1" {...props} />,
+  p: (props) => <p className="my-2" {...props} />,
+  strong: (props) => <strong className="font-bold" {...props} />,
+  em: (props) => <em className="italic" {...props} />,
+  ul: (props) => <ul className="list-disc pl-5 my-2" {...props} />,
+  ol: (props) => <ol className="list-decimal pl-5 my-2" {...props} />,
+  li: (props) => <li className="my-1" {...props} />,
+  blockquote: (props) => (
+    <blockquote className="border-l-4 border-gray-300 pl-4 italic my-2" {...props} />
+  ),
+  a: (props) => <a className="text-blue-500 hover:underline" {...props} />,
+  code: (props) => {
+    const { node, inline, className, children, ...rest } = props as React.ClassAttributes<HTMLElement> & 
+      React.HTMLAttributes<HTMLElement> & {
+        inline?: boolean;
+        className?: string;
+        node?: unknown;
+      };
+    if (inline) {
+      return <code className="bg-gray-100 px-1 rounded" {...props}>{children}</code>;
+    }
+    return (
+      <div className="relative">
+        <button
+          onClick={() => {
+            const code = String(children).replace(/\n$/, '');
+            navigator.clipboard.writeText(code);
+          }}
+          className="absolute top-2 right-2 flex items-center gap-1 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer px-2 py-1 transition-colors"
+        >
+          <Copy size={14} className="text-gray-300" />
+          <span className="text-xs text-gray-300">Copy</span>
+        </button>
+        <SyntaxHighlighter
+          language={className?.replace(/language-/, '') || 'javascript'}
+          style={atomDark}
+          customStyle={{ 
+            margin: '0.5rem 0',
+            borderRadius: '0.5rem',
+            paddingTop: '2rem'
+          }}
+        >
+          {String(children).replace(/\n$/, '')}
+        </SyntaxHighlighter>
+      </div>
+    );
+  }
+};
 
 function App() {
   const [engine, setEngine] = useState<any>(null);
@@ -180,11 +234,24 @@ return (
                           </div>
                       );
                     }
-                    return <p key={`${index}-text-${hashCode(part)}`}>{part}</p>;
+                    return (
+                      <ReactMarkdown 
+                        key={`${index}-text-${hashCode(part)}`}
+                        remarkPlugins={[remarkGfm]}
+                        components={MarkdownComponents}
+                      >
+                        {part}
+                      </ReactMarkdown>
+                    );
                   })}
                 </div>
               ) : (
-                <p className="whitespace-pre-wrap">{message.content}</p>
+                <ReactMarkdown 
+                  remarkPlugins={[remarkGfm]}
+                  components={MarkdownComponents}
+                >
+                  {message.content}
+                </ReactMarkdown>
               )}
             </div>
           </div>
