@@ -9,6 +9,8 @@
 
   --color-user-zone: #CFCFCF;
 
+  --color-user-bubble: #666666; /* light blue */
+
   --color-button-border-in: #4B4B4B;
   --color-button-background-in: #CFCFCF;
   --color-button-icon-in: #4B4B4B;
@@ -33,7 +35,7 @@
     --color-submenu-background: #303030;
     --color-text: #ECECEC;
 
-    --color-user-bubble: #3091ff; /* light blue */
+    --color-user-bubble: #666666; /* light blue */
 
     --color-user-zone: #303030;
 
