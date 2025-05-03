@@ -1,11 +1,10 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { BotMessageSquare, RotateCcw } from 'lucide-react';
+import { BotMessageSquare, RotateCcw, Copy, Check } from 'lucide-react';
 import { CreateMLCEngine } from "@mlc-ai/web-llm";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import { Copy, Check } from 'lucide-react';
 
 interface FormInputs {
   message: string;
