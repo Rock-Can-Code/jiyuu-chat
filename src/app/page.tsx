@@ -128,11 +128,11 @@ return (
         <div className='flex flex-col space-y-4'>
         {messages.map((message, index) => (
           <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`rounded-lg p-4 ${
+            <div className={`rounded-lg p-4 max-w-[80%] ${
               message.role === 'user'
-                ? 'bg-[var(--color-button-background-out)]' // Aplicar estilo del usuario
-                : 'bg-[var(--color-button-background-in)]' // Aplicar estilo de la IA
-            }`}>
+                ? 'bg-[var(--color-user-bubble)] text-black rounded-br-none'
+                : 'bg-[var(--color-button-background-in)] text-[var(--color-text)] rounded-tl-none' // AI message (existing style)
+            }shadow-sm`}>
               {message.content.includes('```') ? (
                 <div className="whitespace-pre-wrap">
                   {message.content.split('```').map((part: string, i: number) => {
@@ -174,7 +174,7 @@ return (
                   })}
                 </div>
               ) : (
-                <p className="text-[var(--color-text)]">{message.content}</p>
+                <p className="whitespace-pre-wrap">{message.content}</p>
               )}
             </div>
           </div>
