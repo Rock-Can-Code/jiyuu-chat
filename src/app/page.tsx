@@ -51,7 +51,7 @@ function App() {
       const aiMessage = response.choices[0].message?.content.trim() || 'No response';
 
       if(aiMessage){
-        console.log('Response from AI:', response);
+        console.log('Response from AI:', aiMessage);
 
         // Añadir la respuesta de la IA al state
         setMessages(prev => [...prev, { role: 'assistant', content: aiMessage }]);
