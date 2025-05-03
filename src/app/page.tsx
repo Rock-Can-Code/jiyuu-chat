@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { BotMessageSquare } from 'lucide-react';
+import { BotMessageSquare, RotateCcw } from 'lucide-react';
 import { CreateMLCEngine } from "@mlc-ai/web-llm";
 
 interface FormInputs {
@@ -12,6 +12,7 @@ function App() {
   const [engine, setEngine] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [loadingProgress, setLoadingProgress] = useState<{ progress: number; text: string; timeElapsed: number } | null>(null); // Estado para el progreso de carga
+  const [loadError, setLoadError] = useState<string | null>(null);  // Estado para si falla la carga
   const [showReadyMessage, setShowReadyMessage] = useState(false); // Estado para controlar la visibilidad del mensaje
   const {
     register,
@@ -70,6 +71,7 @@ function App() {
   };
   useEffect(() => {
     const loadEngine = async () => {
+    try{  
       const SELECTED_MODEL = 'Llama-3.2-1B-Instruct-q4f32_1-MLC';
       const engine = await CreateMLCEngine(SELECTED_MODEL, {
         initProgressCallback: (info) => {
@@ -86,6 +88,11 @@ function App() {
       setTimeout(() => {
         setShowReadyMessage(false);
       }, 1000);
+    
+    } catch (err) {
+      console.error('Error loading model:', err);
+      setLoadError('Ocurrió un error al cargar el modelo. Por favor, recarga la página.');
+    }
     };
 
     loadEngine();
@@ -100,7 +107,15 @@ return (
       <div className="p-6 h-[700px] md:h-[750px] overflow-y-auto ">
 
         {/* Mostrar progreso de carga */}
-        {loadingProgress ? (
+        {loadError ? (
+          <div className="p-3 text-center text-sm text-[var(--color-text)] border border-[var(--color-button-border-out)] bg-[var(--color-button-background-in)] rounded-md shadow-sm max-w-md mx-auto">
+            <p>{loadError}</p>
+            <div className="mt-4 flex flex-col items-center text-sm bg-[var(--color-button-background-in)]">
+              <p>Try to reload the page</p>
+              <RotateCcw onClick={() => window.location.reload()} className="cursor-pointer mt-2" />
+            </div>
+          </div>
+          ) : loadingProgress ? (
           <div className="p-4 text-center text-sm text-[var(--color-text)]">
             <p>Progress: {loadingProgress.progress * 100}%</p>
             <p>Status: {loadingProgress.text}</p>
@@ -160,7 +175,6 @@ return (
           </div>
         </div>
       </form>
-      
     </div>
   </div>
 );
