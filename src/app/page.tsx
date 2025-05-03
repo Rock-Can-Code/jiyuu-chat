@@ -5,7 +5,7 @@ import { BotMessageSquare } from 'lucide-react';
 import { CreateMLCEngine } from "@mlc-ai/web-llm";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import { Copy } from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
 
 interface FormInputs {
   message: string;
@@ -24,6 +24,14 @@ function App() {
   } = useForm<FormInputs>();
 
   const messageContent = watch('message');
+
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+
+  const handleCopy = (code: string, index: number) => {
+    navigator.clipboard.writeText(code);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  };
 
   const onSubmit = async (data: FormInputs) => {
     console.log('Sending message:', data.message);
@@ -131,15 +139,22 @@ return (
                     if (i % 2 === 1) {
                       const language = part.split('\n')[0] || 'javascript';
                       const code = part.split('\n').slice(1).join('\n');
+                      const isCopied = copiedIndex === i;
                       return (
                         <div key={i} className="relative">
                           <button
-                            onClick={() => navigator.clipboard.writeText(code)}
+                            onClick={() => handleCopy(code, i)}
                             className="absolute top-2 right-2 flex items-center gap-1 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer px-2 py-1 transition-colors"
-                            title="Copy code"
+                            title={isCopied ? "Copied!" : "Copy code"}
                           >
-                            <Copy size={14} className="text-gray-300" />
-                            <span className="text-xs text-gray-300">Copy</span>
+                            {isCopied ? (
+                              <Check size={14} className="text-green-400" />
+                            ) : (
+                              <Copy size={14} className="text-gray-300" />
+                            )}
+                            <span className="text-xs text-gray-300">
+                              {isCopied ? "Copied!" : "Copy"}
+                            </span>
                           </button>
                           <SyntaxHighlighter
                             language={language}
