@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { BotMessageSquare } from 'lucide-react';
 import { CreateMLCEngine } from "@mlc-ai/web-llm";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 interface FormInputs {
   message: string;
@@ -121,7 +123,29 @@ return (
                 ? 'bg-[var(--color-button-background-out)]' // Aplicar estilo del usuario
                 : 'bg-[var(--color-button-background-in)]' // Aplicar estilo de la IA
             }`}>
-              <p className="text-[var(--color-text)]">{message.content}</p>
+              {message.content.includes('```') ? (
+                <div className="whitespace-pre-wrap">
+                  {message.content.split('```').map((part: string, i: number) => {
+                    if (i % 2 === 1) {
+                      const language = part.split('\n')[0] || 'javascript';
+                      const code = part.split('\n').slice(1).join('\n');
+                      return (
+                        <SyntaxHighlighter
+                          key={i}
+                          language={language}
+                          style={atomDark}
+                          customStyle={{ margin: '0.5rem 0', borderRadius: '0.5rem' }}
+                        >
+                          {code}
+                          </SyntaxHighlighter>
+                      );
+                    }
+                    return <p key={i}>{part}</p>;
+                  })}
+                </div>
+              ) : (
+                <p className="text-[var(--color-text)]">{message.content}</p>
+              )}
             </div>
           </div>
         ))}
