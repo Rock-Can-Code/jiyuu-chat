@@ -87,6 +87,16 @@ function App() {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   const onSubmit = async (data: FormInputs) => {
     console.log('Sending message:', data.message);
     const userMessage = data.message;
@@ -163,10 +173,8 @@ function App() {
 return (
   <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--color-background)] text-[var(--color-text)]">
     <div className="w-full max-w-4xl rounded-xl overflow-hidden ">
-
       {/* Mensajes */}
       <div className="p-6 h-[700px] md:h-[750px] overflow-y-auto ">
-
         {/* Mostrar progreso de carga */}
         {loadError ? (
           <div className="p-3 text-center text-sm text-[var(--color-text)] border border-[var(--color-button-border-out)] bg-[var(--color-button-background-in)] rounded-md shadow-sm max-w-md mx-auto">
@@ -257,6 +265,7 @@ return (
           </div>
         ))}
         </div>
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}
