@@ -152,7 +152,7 @@ return (
                       const code = part.split('\n').slice(1).join('\n');
                       const isCopied = copiedIndex === i;
                       return (
-                        <div key={i} className="relative">
+                        <div key={`${index}-${hashCode(part)}`} className="relative">
                           <button
                             onClick={() => handleCopy(code, i)}
                             className="absolute top-2 right-2 flex items-center gap-1 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer px-2 py-1 transition-colors"
@@ -181,7 +181,7 @@ return (
                           </div>
                       );
                     }
-                    return <p key={i}>{part}</p>;
+                    return <p key={`${index}-text-${hashCode(part)}`}>{part}</p>;
                   })}
                 </div>
               ) : (
@@ -229,6 +229,17 @@ return (
   </div>
 );
 
+}
+
+//Helper function.
+function hashCode(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash.toString();
 }
 
 export default App;
