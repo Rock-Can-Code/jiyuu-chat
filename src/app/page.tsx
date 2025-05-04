@@ -190,9 +190,7 @@ return (
           </div>
           ) : loadingProgress ? (
           <div className="p-4 text-center text-sm text-[var(--color-text)]">
-            <p>Progress: {loadingProgress.progress * 100}%</p>
             <p>Status: {loadingProgress.text}</p>
-            <p>Time Elapsed: {loadingProgress.timeElapsed.toFixed(2)} seconds</p>
           </div>
         ) : (
           showReadyMessage && (
