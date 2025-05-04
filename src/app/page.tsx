@@ -65,6 +65,7 @@ const MarkdownComponents: Components = {
 };
 
 function App() {
+  const [isResponding, setIsResponding] = useState(false);
   const [engine, setEngine] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [loadingProgress, setLoadingProgress] = useState<{ progress: number; text: string; timeElapsed: number } | null>(null); // Estado para el progreso de carga
@@ -98,11 +99,12 @@ function App() {
   }, [messages]);
 
   const onSubmit = async (data: FormInputs) => {
-    console.log('Sending message:', data.message);
     const userMessage = data.message;
-
-    // Añadir el mensaje del usuario al state
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    const updatedMessages = [
+      ...messages,
+      { role: 'user', content: userMessage }
+    ];
+    setMessages(updatedMessages);
 
     // Resetear el formulario tras enviar 
     reset();
@@ -112,11 +114,11 @@ function App() {
       return;
     }
 
+    setIsResponding(true);
+
     try {
       const response = await engine.chat.completions.create({
-        messages: [
-          { role: 'user', content: userMessage }
-        ]
+        messages: updatedMessages
       });
 
       // Verifica que la respuesta tiene la estructura esperada (me dio algun pete cuando no sabia que responder)
@@ -138,6 +140,8 @@ function App() {
           error: true,
         },
       ]);
+    } finally {
+      setIsResponding(false);
     }
   };
   useEffect(() => {
@@ -202,7 +206,7 @@ return (
           <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`rounded-lg p-4 max-w-[80%] ${
               message.role === 'user'
-                ? 'bg-[var(--color-user-bubble)] text-black rounded-br-none'
+                ? 'bg-[var(--color-user-bubble)] text-[var(--color-text)] rounded-br-none'
                 : 'bg-[var(--color-button-background-in)] text-[var(--color-text)] rounded-tl-none' // AI message (existing style)
             }shadow-sm`}>
               {message.content.includes('```') ? (
@@ -267,6 +271,18 @@ return (
         </div>
         <div ref={messagesEndRef} />
       </div>
+      {isResponding && (
+        <div className="flex justify-center">
+          <div className="rounded-lg p-4 max-w-[80%] bg-[var(--color-button-background-in)] text-[var(--color-text)] rounded-tl-none shadow-sm">
+            <span className="flex items-center gap-2">
+              <svg className="animate-spin h-5 w-5 text-gray-400" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Input */}
       <form onSubmit={handleSubmit(onSubmit)}>
