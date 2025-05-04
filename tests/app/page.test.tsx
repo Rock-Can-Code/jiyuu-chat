@@ -3,6 +3,12 @@ import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import App from '../../src/app/page';
 
+jest.mock('remark-gfm', () => () => ({}));
+jest.mock('react-markdown', () => ({
+  __esModule: true,
+  default: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+}));
+
 // Mock the MLCEngine and other dependencies
 jest.mock('@mlc-ai/web-llm', () => ({
   CreateMLCEngine: jest.fn(() => ({
@@ -22,7 +28,7 @@ jest.mock('react-syntax-highlighter', () => ({
 
 describe('App Component', () => {
   beforeEach(() => {
-    // Clear all mocks before each test
+    window.HTMLElement.prototype.scrollIntoView = jest.fn();
     jest.clearAllMocks();
   });
   
