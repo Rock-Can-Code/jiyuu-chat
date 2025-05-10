@@ -1,6 +1,11 @@
 name: CI/CD Pipeline
 
 on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
     inputs:
       pipeline_type:
@@ -11,6 +16,12 @@ on:
           - full
           - deploy-only
 
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+
 jobs:
   CI_CDD_Pipeline:
     runs-on: ubuntu-latest
@@ -19,35 +30,35 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
-      # Full CI/CD pipeline
+
+      # Full CI/CD pipeline (only if 'full' option selected)
       - name: Install dependencies
-        if: ${{ github.event.inputs.pipeline_type == 'full' }}
+        if: ${{ github.event.inputs.pipeline_type == 'full' || github.event_name == 'push' || github.event_name == 'pull_request' }}
         run: npm install
 
       - name: Run tests
-        if: ${{ github.event.inputs.pipeline_type == 'full' }}
+        if: ${{ github.event.inputs.pipeline_type == 'full' || github.event_name == 'push' || github.event_name == 'pull_request' }}
         run: npm run test
 
       - name: SonarQube Scan
-        if: ${{ github.event.inputs.pipeline_type == 'full' }}
+        if: ${{ github.event.inputs.pipeline_type == 'full' || github.event_name == 'push' || github.event_name == 'pull_request' }}
         uses: SonarSource/sonarqube-scan-action@v5
         with:
           sonarToken: ${{ secrets.SONARCLOUD_TOKEN }}
 
-      # Deployment step
+      # Deployment Step (runs for both pipeline types)
       - name: Install Vercel CLI
-        if: ${{ github.event.inputs.pipeline_type == 'full' || github.event.inputs.pipeline_type == 'deploy-only' }}
+        if: ${{ github.event.inputs.pipeline_type == 'full' || github.event.inputs.pipeline_type == 'deploy-only' || github.event_name == 'push' || github.event_name == 'pull_request' }}
         run: npm install --global vercel@latest
 
       - name: Pull Vercel Environment Information
-        if: ${{ github.event.inputs.pipeline_type == 'full' || github.event.inputs.pipeline_type == 'deploy-only' }}
+        if: ${{ github.event.inputs.pipeline_type == 'full' || github.event.inputs.pipeline_type == 'deploy-only' || github.event_name == 'push' || github.event_name == 'pull_request' }}
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Build Project Artifacts
-        if: ${{ github.event.inputs.pipeline_type == 'full' || github.event.inputs.pipeline_type == 'deploy-only' }}
+        if: ${{ github.event.inputs.pipeline_type == 'full' || github.event.inputs.pipeline_type == 'deploy-only' || github.event_name == 'push' || github.event_name == 'pull_request' }}
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy Project Artifacts to Vercel
-        if: ${{ github.event.inputs.pipeline_type == 'full' || github.event.inputs.pipeline_type == 'deploy-only' }}
+        if: ${{ github.event.inputs.pipeline_type == 'full' || github.event.inputs.pipeline_type == 'deploy-only' || github.event_name == 'push' || github.event_name == 'pull_request' }}
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
