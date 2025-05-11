@@ -13,14 +13,26 @@ Our goal is to provide a platform that is not only functional but also easy to e
 
 ---
 
-## 🌟 Features
+## ✅ Feature Progress
 
-- **AI-Powered Conversations**: Leverages state-of-the-art machine learning models for natural and engaging interactions.
-- **Customizable Themes**: Easily switch between light and dark modes or customize the UI to fit your needs.
-- **Real-Time Streaming**: Supports real-time message streaming for a responsive chat experience.
-- **Code Highlighting**: Automatically formats and highlights code snippets shared in the chat.
-- **Mobile-Responsive Design**: Fully optimized for both desktop and mobile devices.
-- **Open Source**: Built by the community, for the community.
+Here's an overview of current and upcoming features being developed in **Jiyuu Chat**:
+
+### ✔️ Completed
+- [x] **Load Model** – Ability to load and initialize an AI model for chatting.
+- [x] **Clean Chat** – Option to clear the conversation history easily.
+- [x] **Choose Model: Llama-3.2-1B** – User can select the Llama-3.2-1B model for interaction.
+- [x] **AI-Powered Conversations** – Leverages state-of-the-art machine learning models for natural and engaging interactions.
+- [x] **Customizable Themes** – Easily switch between light and dark modes or customize the UI to fit your needs.
+- [x] **Real-Time Streaming** – Supports real-time message streaming for a responsive chat experience.
+- [x] **Code Highlighting** – Automatically formats and highlights code snippets shared in the chat.
+- [x] **Mobile-Responsive Design** – Fully optimized for both desktop and mobile devices.
+- [x] **Open Source** – Built by the community, for the community.
+
+### ⏳ In Progress / Planned
+- [ ] **Choose Model: Mistral-Small-3.1-24B** – Add support to select the Mistral-Small-3.1-24B model.
+- [ ] **Enhance [WebLLM (mlc-ai)](https://github.com/mlc-ai/mlc-llm) Compilation** – Contribute to fixing bugs in the compilation of custom models for WebGPU.
+- [ ] **[Transformers.js](https://github.com/huggingface/transformers.js/) Large LLM Support** – Contribute to extending support for larger models in the `transformers.js` framework.
+- [ ] **Load Uncensored Model: Dolphin** – Integrate support for uncensored variants like Dolphin for broader AI use cases.
 
 ---
 
