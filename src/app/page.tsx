@@ -141,10 +141,10 @@ function App() {
   const [isInfoVisible, setIsInfoVisible] = useState(false);
 
   const infoRef = useRef(null);
-  const githubIconRef = useRef(null);
-  const rccIconRef = useRef(null);
-  const githubLinkRef = useRef(null);
-  const rccLinkRef = useRef(null);
+  const githubIconRef = useRef<SVGSVGElement | null>(null);
+  const rccIconRef = useRef<SVGSVGElement | null>(null);
+  const githubLinkRef = useRef<HTMLAnchorElement | null>(null);
+  const rccLinkRef = useRef<HTMLAnchorElement | null>(null);
   const infoTextRef = useRef(null);
   const messageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -197,9 +197,14 @@ function App() {
     const githubLink = githubLinkRef.current;
     const rccLink = rccLinkRef.current;
 
+    if (!githubIcon || !rccIcon || !githubLink || !rccLink) {
+      console.warn("One or more elements are null. Skipping event listener setup.");
+      return;
+    }
+
     gsap.set([githubLink, rccLink], { autoAlpha: 0 });
 
-    const showLink = (icon: null, link: gsap.TweenTarget) => {
+    const showLink = (icon: SVGSVGElement, link: gsap.TweenTarget) => {
       gsap.to(link, { autoAlpha: 1, x: 10, duration: 0.3 });
     };
 
@@ -390,12 +395,20 @@ function App() {
           )}
           <div className='flex flex-col space-y-4'>
             {messages.map((message, index) => (
-              <div key={index} ref={el => messageRefs.current[index] = el} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`rounded-lg p-4 max-w-[80%] ${
-                  message.role === 'user'
-                    ? 'bg-[var(--color-user-bubble)] text-[var(--color-text)] rounded-br-none'
-                    : 'bg-[var(--color-button-background-in)] text-[var(--color-text)] rounded-tl-none'
-                }shadow-sm`}>
+              <div
+                key={index}
+                ref={(el) => {
+                  messageRefs.current[index] = el;
+                }}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div
+                  className={`rounded-lg p-4 max-w-[80%] ${
+                    message.role === 'user'
+                      ? 'bg-[var(--color-user-bubble)] text-[var(--color-text)] rounded-br-none'
+                      : 'bg-[var(--color-button-background-in)] text-[var(--color-text)] rounded-tl-none'
+                  } shadow-sm`}
+                >
                   {message.content.includes('```') ? (
                     <div className="whitespace-pre-wrap">
                       {message.content.split('```').map((part: string, i: number) => {
@@ -408,7 +421,7 @@ function App() {
                               <button
                                 onClick={() => handleCopy(code, i)}
                                 className="absolute top-2 right-2 flex items-center gap-1 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer px-2 py-1 transition-colors"
-                                title={isCopied ? "Copied!" : "Copy code"}
+                                title={isCopied ? 'Copied!' : 'Copy code'}
                               >
                                 {isCopied ? (
                                   <Check size={14} className="text-green-400" />
@@ -416,7 +429,7 @@ function App() {
                                   <Copy size={14} className="text-gray-300" />
                                 )}
                                 <span className="text-xs text-gray-300">
-                                  {isCopied ? "Copied!" : "Copy"}
+                                  {isCopied ? 'Copied!' : 'Copy'}
                                 </span>
                               </button>
                               <SyntaxHighlighter
@@ -425,7 +438,7 @@ function App() {
                                 customStyle={{
                                   margin: '0.5rem 0',
                                   borderRadius: '0.5rem',
-                                  paddingTop: '2rem'
+                                  paddingTop: '2rem',
                                 }}
                               >
                                 {code}
@@ -441,9 +454,7 @@ function App() {
                       })}
                     </div>
                   ) : (
-                    <div>
-                      {renderMarkdown(message.content)}
-                    </div>
+                    <div>{renderMarkdown(message.content)}</div>
                   )}
                 </div>
               </div>
