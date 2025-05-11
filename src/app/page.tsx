@@ -12,6 +12,7 @@ import remarkRehype from 'remark-rehype';
 import rehypeReact, { Components } from 'rehype-react';
 import { jsx, Fragment, jsxs } from 'react/jsx-runtime';
 import { gsap } from 'gsap';
+import { ThemeImage } from './components/ThemeImage';
 
 interface FormInputs {
   message: string;
@@ -457,7 +458,12 @@ function App() {
               </div>
             )}
             {showWelcomeMessage && (
-              <img src="/jiyuu.png" style={welcomeMessageStyles.image} />
+              <ThemeImage
+                srcLight="/jiyuu-light.png"
+                srcDark="/jiyuu-dark.png"
+                alt="Jiyuu Logo"
+                style={welcomeMessageStyles.image}
+              />
             )}
           </div>
 
