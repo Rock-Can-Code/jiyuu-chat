@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { BotMessageSquare, RotateCcw, Copy, Check, Square, Github, Globe, BadgeInfo, Trash2 } from 'lucide-react';
+import { BotMessageSquare, RotateCcw, Copy, Check, Square, Trash2 } from 'lucide-react';
 import { CreateMLCEngine } from "@mlc-ai/web-llm";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
@@ -12,7 +12,8 @@ import remarkRehype from 'remark-rehype';
 import rehypeReact, { Components } from 'rehype-react';
 import { jsx, Fragment, jsxs } from 'react/jsx-runtime';
 import { gsap } from 'gsap';
-import { ThemeImage } from './components/ThemeImage';
+import { InfoButton } from './components/InfoButton';
+import { WelcomeMessage } from './components/WelcomeMessage';
 
 interface FormInputs {
   message: string;
@@ -36,11 +37,9 @@ const MarkdownComponents: Components = {
       </code>
     );
   },
-  // Handle paragraphs
   p({ node, children, ...props }) {
     return <p className="mb-4" {...props}>{children}</p>;
   },
-  // Handle headings
   h1({ node, children, ...props }) {
     return <h1 className="text-3xl font-bold mb-4" {...props}>{children}</h1>;
   },
@@ -50,7 +49,6 @@ const MarkdownComponents: Components = {
   h3({ node, children, ...props }) {
     return <h3 className="text-xl font-bold mb-2" {...props}>{children}</h3>;
   },
-  // Handle lists
   ul({ node, children, ...props }) {
     return <ul className="list-disc pl-6 mb-4" {...props}>{children}</ul>;
   },
@@ -60,7 +58,6 @@ const MarkdownComponents: Components = {
   li({ node, children, ...props }) {
     return <li className="mb-1" {...props}>{children}</li>;
   },
-  // Handle blockquotes
   blockquote({ node, children, ...props }) {
     return (
       <blockquote className="border-l-4 border-gray-300 pl-4 italic mb-4" {...props}>
@@ -68,7 +65,6 @@ const MarkdownComponents: Components = {
       </blockquote>
     );
   },
-  // Handle links
   a({ node, children, ...props }) {
     return (
       <a className="text-blue-500 hover:underline" {...props}>
@@ -76,15 +72,12 @@ const MarkdownComponents: Components = {
       </a>
     );
   },
-  // Handle images
   img({ node, ...props }) {
     return <img className="max-w-full h-auto my-4" {...props} />;
   },
-  // Handle horizontal rule
   hr({ node, ...props }) {
     return <hr className="my-6 border-gray-300" {...props} />;
   },
-  // Handle tables
   table({ node, children, ...props }) {
     return (
       <div className="overflow-x-auto my-4">
@@ -108,7 +101,6 @@ const MarkdownComponents: Components = {
       </td>
     );
   },
-  // Handle inline code
   inlineCode({ node, ...props }) {
     return (
       <code className="bg-gray-100 px-1 py-0.5 rounded text-sm" {...props} />
@@ -142,21 +134,14 @@ function App() {
   const [isInfoVisible, setIsInfoVisible] = useState(false);
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(true);
 
-  const infoRef = useRef(null);
-  const githubIconRef = useRef<SVGSVGElement | null>(null);
-  const rccIconRef = useRef<SVGSVGElement | null>(null);
-  const githubLinkRef = useRef<HTMLAnchorElement | null>(null);
-  const rccLinkRef = useRef<HTMLAnchorElement | null>(null);
-  const infoTextRef = useRef(null);
   const messageRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const welcomeMessageRef = useRef(null);
+  const welcomeMessageRef = useRef<HTMLDivElement>(null);
 
   const toggleInfo = () => {
     setIsInfoVisible(!isInfoVisible);
   };
 
   const clearChat = () => {
-    // Animate each message to fall down before removing
     messageRefs.current.forEach((messageRef, index) => {
       if (messageRef) {
         gsap.to(messageRef, {
@@ -173,69 +158,6 @@ function App() {
       }
     });
   };
-
-  useEffect(() => {
-    if (isInfoVisible) {
-      gsap.to(infoRef.current, {
-        x: 0,
-        duration: 0.5,
-        ease: "power2.out"
-      });
-      gsap.fromTo(infoTextRef.current,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out", delay: 0.2 }
-      );
-    } else {
-      gsap.to(infoRef.current, {
-        x: -300,
-        duration: 0.5,
-        ease: "power2.in"
-      });
-    }
-  }, [isInfoVisible]);
-
-  useEffect(() => {
-    if (showWelcomeMessage) {
-      gsap.fromTo(welcomeMessageRef.current,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
-      );
-    }
-  }, [showWelcomeMessage]);
-
-  useEffect(() => {
-    const githubIcon = githubIconRef.current;
-    const rccIcon = rccIconRef.current;
-    const githubLink = githubLinkRef.current;
-    const rccLink = rccLinkRef.current;
-
-    if (!githubIcon || !rccIcon || !githubLink || !rccLink) {
-      console.warn("One or more elements are null. Skipping event listener setup.");
-      return;
-    }
-
-    gsap.set([githubLink, rccLink], { autoAlpha: 0 });
-
-    const showLink = (icon: SVGSVGElement, link: gsap.TweenTarget) => {
-      gsap.to(link, { autoAlpha: 1, x: 10, duration: 0.3 });
-    };
-
-    const hideLink = (link: gsap.TweenTarget) => {
-      gsap.to(link, { autoAlpha: 0, x: 0, duration: 0.3 });
-    };
-
-    githubIcon.addEventListener('mouseenter', () => showLink(githubIcon, githubLink));
-    githubIcon.addEventListener('mouseleave', () => hideLink(githubLink));
-    rccIcon.addEventListener('mouseenter', () => showLink(rccIcon, rccLink));
-    rccIcon.addEventListener('mouseleave', () => hideLink(rccLink));
-
-    return () => {
-      githubIcon.removeEventListener('mouseenter', () => showLink(githubIcon, githubLink));
-      githubIcon.removeEventListener('mouseleave', () => hideLink(githubLink));
-      rccIcon.removeEventListener('mouseenter', () => showLink(rccIcon, rccLink));
-      rccIcon.removeEventListener('mouseleave', () => hideLink(rccLink));
-    };
-  }, []);
 
   const {
     register,
@@ -362,74 +284,13 @@ function App() {
     }
   };
 
-  const welcomeMessageStyles = {
-    container: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      flexDirection: 'row',
-      gap: '10px',
-    },
-    textContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      textAlign: 'center',
-      fontSize: '8.25rem',
-      fontWeight: 'bold',
-      marginBottom: '1rem',
-      fontFamily: "'Yuji Mai'",
-      '@media (maxWidth: 768px)': {
-        fontSize: '4rem',
-      },
-    },
-    image: {
-      maxWidth: '40%',
-      maxHeight: '40%',
-      '@media (maxWidth: 768px)': {
-        maxWidth: '70%',
-        maxHeight: '70%',
-      },
-    },
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--color-background)] text-[var(--color-text)]">
       <div className="w-full max-w-4xl rounded-xl overflow-hidden">
-        <button onClick={toggleInfo} className="absolute top-4 left-4 bg-[var(--color-button-background-in)] text-[var(--color-text)] p-2 rounded-full shadow-lg z-50">
-          <BadgeInfo className="w-5 h-5 cursor-pointer" />
-        </button>
-
+        <InfoButton isInfoVisible={isInfoVisible} toggleInfo={toggleInfo} />
         <button onClick={clearChat} className="absolute top-4 right-4 bg-[var(--color-button-background-in)] text-[var(--color-text)] p-2 rounded-full shadow-lg z-50">
           <Trash2 className="w-5 h-5 cursor-pointer" />
         </button>
-
-        <div ref={infoRef} className="fixed top-0 left-0 w-64 bg-[var(--color-button-background-in)] text-[var(--color-text)] p-4 shadow-lg rounded-lg z-50 translate-x-[-300px]">
-          <button onClick={toggleInfo} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-            &times;
-          </button>
-          <h2 className="text-xl font-bold mb-4">About Jiyuu Chat</h2>
-          <p ref={infoTextRef} className="mb-2">Checkout this links if you want to know more about it.</p>
-          <div className="flex items-center">
-            <a href="https://github.com/Rock-Can-Code/jiyuu-chat" target="_blank" rel="noopener noreferrer">
-              <Github ref={githubIconRef} className="w-6 h-6 mr-2 cursor-pointer" />
-            </a>
-            <a ref={githubLinkRef} href="https://github.com/Rock-Can-Code/jiyuu-chat" target="_blank" rel="noopener noreferrer" className="text-gray-500">
-              GitHub Repository
-            </a>
-          </div>
-          <div className="flex items-center mt-2">
-            <a href="https://rockcancode.com" target="_blank" rel="noopener noreferrer">
-              <Globe ref={rccIconRef} className="w-6 h-6 mr-2 cursor-pointer" />
-            </a>
-            <a ref={rccLinkRef} href="https://rockcancode.com" target="_blank" rel="noopener noreferrer" className="text-gray-500">
-              Rock Can Code Web
-            </a>
-          </div>
-        </div>
-
-        {/* Messages */}
         <div className="p-6 h-[700px] md:h-[750px] overflow-y-auto">
           {loadError ? (
             <div className="p-3 text-center text-sm text-[var(--color-text)] border border-[var(--color-button-border-out)] bg-[var(--color-button-background-in)] rounded-md shadow-sm max-w-md mx-auto">
@@ -450,22 +311,10 @@ function App() {
               </div>
             )
           )}
-          <div ref={welcomeMessageRef} style={welcomeMessageStyles.container as React.CSSProperties}>
-            {showWelcomeMessage && (
-              <div style={welcomeMessageStyles.textContainer as React.CSSProperties}>
-                <span>自</span>
-                <span>由</span>
-              </div>
-            )}
-            {showWelcomeMessage && (
-              <ThemeImage
-                srcLight="/jiyuu-light.png"
-                srcDark="/jiyuu-dark.png"
-                alt="Jiyuu Logo"
-                style={welcomeMessageStyles.image}
-              />
-            )}
-          </div>
+          <WelcomeMessage
+            showWelcomeMessage={showWelcomeMessage}
+            welcomeMessageRef={welcomeMessageRef}
+          />
 
           <div className='flex flex-col space-y-4'>
             {messages.map((message, index) => (
@@ -537,7 +386,6 @@ function App() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="p-4 flex space-x-4">
             <div className="flex-1 relative">
@@ -578,13 +426,12 @@ function App() {
   );
 }
 
-// Helper function.
 function hashCode(str: string): string {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
     hash = ((hash << 5) - hash) + char;
-    hash |= 0; // Convert to 32bit integer
+    hash |= 0;
   }
   return hash.toString();
 }
