@@ -20,6 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+      <link href="https://fonts.googleapis.com/css2?family=Yuji+Mai&display=swap" rel="stylesheet"></link> 
+      </head>
       <body
         className={`${inter.variable} antialiased`}
       >

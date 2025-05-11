@@ -139,6 +139,7 @@ function App() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [showReadyMessage, setShowReadyMessage] = useState(false);
   const [isInfoVisible, setIsInfoVisible] = useState(false);
+  const [showWelcomeMessage, setShowWelcomeMessage] = useState(true);
 
   const infoRef = useRef(null);
   const githubIconRef = useRef<SVGSVGElement | null>(null);
@@ -147,6 +148,7 @@ function App() {
   const rccLinkRef = useRef<HTMLAnchorElement | null>(null);
   const infoTextRef = useRef(null);
   const messageRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const welcomeMessageRef = useRef(null);
 
   const toggleInfo = () => {
     setIsInfoVisible(!isInfoVisible);
@@ -190,6 +192,15 @@ function App() {
       });
     }
   }, [isInfoVisible]);
+
+  useEffect(() => {
+    if (showWelcomeMessage) {
+      gsap.fromTo(welcomeMessageRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
+      );
+    }
+  }, [showWelcomeMessage]);
 
   useEffect(() => {
     const githubIcon = githubIconRef.current;
@@ -337,6 +348,51 @@ function App() {
     loadEngine();
   }, []);
 
+  const handleInputFocus = () => {
+    if (welcomeMessageRef.current) {
+      gsap.to(welcomeMessageRef.current, {
+        y: 100,
+        opacity: 0,
+        duration: 0.5,
+        onComplete: () => {
+          setShowWelcomeMessage(false);
+        }
+      });
+    }
+  };
+
+  const welcomeMessageStyles = {
+    container: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: '10px',
+    },
+    textContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
+      fontSize: '8.25rem',
+      fontWeight: 'bold',
+      marginBottom: '1rem',
+      fontFamily: "'Yuji Mai'",
+      '@media (maxWidth: 768px)': {
+        fontSize: '4rem',
+      },
+    },
+    image: {
+      maxWidth: '40%',
+      maxHeight: '40%',
+      '@media (maxWidth: 768px)': {
+        maxWidth: '70%',
+        maxHeight: '70%',
+      },
+    },
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--color-background)] text-[var(--color-text)]">
       <div className="w-full max-w-4xl rounded-xl overflow-hidden">
@@ -393,6 +449,18 @@ function App() {
               </div>
             )
           )}
+          <div ref={welcomeMessageRef} style={welcomeMessageStyles.container as React.CSSProperties}>
+            {showWelcomeMessage && (
+              <div style={welcomeMessageStyles.textContainer as React.CSSProperties}>
+                <span>自</span>
+                <span>由</span>
+              </div>
+            )}
+            {showWelcomeMessage && (
+              <img src="/jiyuu.png" style={welcomeMessageStyles.image} />
+            )}
+          </div>
+
           <div className='flex flex-col space-y-4'>
             {messages.map((message, index) => (
               <div
@@ -480,6 +548,7 @@ function App() {
                     handleSubmit(onSubmit)();
                   }
                 }}
+                onFocus={handleInputFocus}
               />
               <button
                 type="button"
