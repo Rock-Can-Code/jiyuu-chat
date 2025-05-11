@@ -292,7 +292,7 @@ function App() {
         ...prev,
         {
           role: 'assistant',
-          content: '⚠️ Hubo un error al generar la respuesta. Inténtelo de nuevo.',
+          content: '⚠️ There was an error generating the response. Please try again.',
           error: true,
         },
       ]);
@@ -330,7 +330,7 @@ function App() {
 
       } catch (err) {
         console.error('Error loading model:', err);
-        setLoadError('Ocurrió un error al cargar el modelo. Por favor, recarga la página.');
+        setLoadError('An error occurred while loading the model. Please reload the page.');
       }
     };
 
