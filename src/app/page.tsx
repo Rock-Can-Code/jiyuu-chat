@@ -397,11 +397,11 @@ function App() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--color-background)] text-[var(--color-text)]">
       <div className="w-full max-w-4xl rounded-xl overflow-hidden">
         <button onClick={toggleInfo} className="absolute top-4 left-4 bg-[var(--color-button-background-in)] text-[var(--color-text)] p-2 rounded-full shadow-lg z-50">
-          <BadgeInfo className="w-5 h-5" />
+          <BadgeInfo className="w-5 h-5 cursor-pointer" />
         </button>
 
         <button onClick={clearChat} className="absolute top-4 right-4 bg-[var(--color-button-background-in)] text-[var(--color-text)] p-2 rounded-full shadow-lg z-50">
-          <Trash2 className="w-5 h-5" />
+          <Trash2 className="w-5 h-5 cursor-pointer" />
         </button>
 
         <div ref={infoRef} className="fixed top-0 left-0 w-64 bg-[var(--color-button-background-in)] text-[var(--color-text)] p-4 shadow-lg rounded-lg z-50 translate-x-[-300px]">
