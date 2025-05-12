@@ -32,7 +32,7 @@ Here's an overview of current and upcoming features being developed in **Jiyuu C
 - [ ] **Choose Model: Mistral-Small-3.1-24B** – Add support to select the Mistral-Small-3.1-24B model.
 - [ ] **Enhance [WebLLM (mlc-ai)](https://github.com/mlc-ai/mlc-llm) Compilation** – Contribute to fixing bugs in the compilation of custom models for WebGPU.
 - [ ] **[Transformers.js](https://github.com/huggingface/transformers.js/) Large LLM Support** – Contribute to extending support for larger models in the `transformers.js` framework.
-- [ ] **Load Uncensored Model: Dolphin** – Integrate support for uncensored variants like Dolphin for broader AI use cases.
+- [ ] **Load Uncensored Model** – Integrate support for uncensored LLMs for broader AI use cases.
 
 ---
 
