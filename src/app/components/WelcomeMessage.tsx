@@ -15,26 +15,12 @@ const welcomeMessageStyles = {
     flexDirection: 'row',
     gap: '10px',
   },
-  textContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-    fontSize: '8.25rem',
-    fontWeight: 'bold',
-    marginBottom: '1rem',
-    fontFamily: "'Yuji Mai'",
-    '@media (maxWidth: 768px)': {
-      fontSize: '4rem',
-    },
-  },
   image: {
     maxWidth: '40%',
     maxHeight: '40%',
     '@media (maxWidth: 768px)': {
-      maxWidth: '70%',
-      maxHeight: '70%',
+      maxWidth: '120%',
+      maxHeight: '120%',
     },
   },
 };
@@ -52,10 +38,12 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ showWelcomeMessa
   return (
     <div ref={welcomeMessageRef} style={welcomeMessageStyles.container as React.CSSProperties}>
       {showWelcomeMessage && (
-        <div style={welcomeMessageStyles.textContainer as React.CSSProperties}>
-          <span>自</span>
-          <span>由</span>
-        </div>
+        <ThemeImage
+          srcLight="/jiyuu-kanji-light.png"
+          srcDark="/jiyuu-kanji-dark.png"
+          alt="Jiyuu Logo"
+          style={welcomeMessageStyles.image}
+        />
       )}
       {showWelcomeMessage && (
         <ThemeImage
