@@ -15,10 +15,28 @@ import { gsap } from 'gsap';
 import { InfoButton } from '../components/InfoButton';
 import { WelcomeMessage } from '../components/WelcomeMessage';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
 
 interface FormInputs {
   message: string;
 }
+
+const locales = [
+  { code: 'en', name: 'English' },
+  { code: 'es', name: 'Español' },
+  { code: 'ja', name: '日本語' },
+  { code: 'de', name: 'Deutsch' },
+  { code: 'fr', name: 'Français' },
+  { code: 'it', name: 'Italiano' },
+  { code: 'pt-BR', name: 'Português (Brasil)' },
+  { code: 'ru', name: 'Русский' },
+  { code: 'ar', name: 'العربية' },
+  { code: 'cs', name: 'Čeština' },
+  { code: 'zh-CN', name: '中文 (简体)' },
+  { code: 'ko', name: '한국어' },
+  { code: 'pt-PT', name: 'Português (Portugal)' },
+];
 
 const MarkdownComponents: Components = {
   code({ node, inline, className, children, ...props }) {
@@ -127,6 +145,8 @@ function renderMarkdown(markdown: string): React.ReactNode {
 
 function App() {
   const t = useTranslations('HomePage');
+  const router = useRouter();
+  const locale = useLocale();
   const [isResponding, setIsResponding] = useState(false);
   const [engine, setEngine] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
@@ -159,6 +179,10 @@ function App() {
         });
       }
     });
+  };
+
+  const handleLanguageChange = (newLocale: string) => {
+    router.push(`/${newLocale}`);
   };
 
   const {
@@ -290,6 +314,19 @@ function App() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--color-background)] text-[var(--color-text)]">
       <div className="w-full max-w-4xl rounded-xl overflow-hidden">
         <InfoButton isInfoVisible={isInfoVisible} toggleInfo={toggleInfo} />
+        <div className="absolute top-4 right-16">
+          <select
+            value={locale}
+            onChange={(e) => handleLanguageChange(e.target.value)}
+            className="bg-[var(--color-button-background-in)] text-[var(--color-text)] border-[var(--color-button-border)] rounded p-2"
+          >
+            {locales.map((locale) => (
+              <option key={locale.code} value={locale.code}>
+                {locale.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <button onClick={clearChat} className="absolute top-4 right-4 bg-[var(--color-button-background-in)] text-[var(--color-text)] p-2 rounded-full shadow-lg z-50">
           <Trash2 className="w-5 h-5 cursor-pointer" />
         </button>
