@@ -330,9 +330,9 @@ function App() {
                 <div
                   className={`rounded-lg p-4 max-w-[80%] ${
                     message.role === 'user'
-                      ? 'bg-[var(--color-user-bubble)] text-[var(--color-text)] rounded-br-none'
+                      ? 'bg-[var(--color-user-bubble)] text-[var(--color-text)] rounded-br-none shadow-sm'
                       : 'bg-[var(--color-button-background-in)] text-[var(--color-text)] rounded-tl-none'
-                  } shadow-sm`}
+                  } `}
                 >
                   {message.content.includes('```') ? (
                     <div className="whitespace-pre-wrap">
