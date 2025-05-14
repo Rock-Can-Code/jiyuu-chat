@@ -1,15 +1,13 @@
 module.exports = {
-    presets: [
-        ['@babel/preset-env', {targets: {node: 'current'}}],
-        '@babel/preset-typescript',
-      ],
-    testEnvironment: 'jsdom',
-    moduleNameMapper: {
-      '^@/(.*)$': '<rootDir>/tests/$1',
-    },
-    transformIgnorePatterns: [
-        "/node_modules/(?![@autofiy/autofiyable|@autofiy/property]).+\\.js$",
-        "/node_modules/(?![@autofiy/autofiyable|@autofiy/property]).+\\.ts$",
-        "/node_modules/(?![@autofiy/autofiyable|@autofiy/property]).+\\.tsx$",
-    ],
-  };
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['@testing-library/jest-dom'],
+  transform: {
+    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
+  },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
+  transformIgnorePatterns: [
+    '/node_modules/(?!remark-gfm|mdast-util-gfm|micromark-extension-gfm)'
+  ],
+};

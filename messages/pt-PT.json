@@ -1,0 +1,18 @@
+{
+  "HomePage": {
+    "about": "Ir para a página sobre",
+    "reload": "Tente recarregar a página",
+    "status": "Estado",
+    "go": "Vai!",
+    "copied": "Copiado!",
+    "copy_code": "Copiar código",
+    "type_your_message_here": "Escreva a sua mensagem aqui..."
+  },
+  "AboutPage": {
+    "about": "Sobre o Jiyuu Chat",
+    "description": "Chat totalmente local com IA alimentado por WebLLM. Sem servidores, apenas você e o seu navegador. Consulte estes links se quiser saber mais sobre isso.",
+    "github": "Repositório no GitHub",
+    "rock": "Rock Can Code Web",
+    "check": "Verifique a compatibilidade do seu dispositivo com WebGPU"
+  }
+}

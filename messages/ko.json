@@ -1,0 +1,18 @@
+{
+  "HomePage": {
+    "about": "정보 페이지로 이동",
+    "reload": "페이지를 새로 고침해 보세요",
+    "status": "상태",
+    "go": "가자!",
+    "copied": "복사됨!",
+    "copy_code": "코드 복사",
+    "type_your_message_here": "여기에 메시지를 입력하세요..."
+  },
+  "AboutPage": {
+    "about": "Jiyuu Chat에 대해",
+    "description": "WebLLM으로 구동되는 완전히 로컬 AI 채팅. 서버 없이, 오직 당신과 당신의 브라우저만. 더 알고 싶다면 이 링크들을 확인하세요.",
+    "github": "GitHub 저장소",
+    "rock": "Rock Can Code Web",
+    "check": "WebGPU 호환성 확인"
+  }
+}
