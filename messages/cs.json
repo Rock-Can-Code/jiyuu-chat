@@ -1,0 +1,18 @@
+{
+  "HomePage": {
+    "about": "Přejděte na stránku o",
+    "reload": "Zkuste znovu načíst stránku",
+    "status": "Stav",
+    "go": "Jdi!",
+    "copied": "Zkopírováno!",
+    "copy_code": "Kopírovat kód",
+    "type_your_message_here": "Zadejte svou zprávu zde..."
+  },
+  "AboutPage": {
+    "about": "O Jiyuu Chat",
+    "description": "Úplně lokální AI chat poháněný WebLLM. Žádné servery, jen vy a váš prohlížeč. Podívejte se na tyto odkazy, pokud chcete vědět více.",
+    "github": "GitHub repozitář",
+    "rock": "Rock Can Code Web",
+    "check": "Zkontrolujte kompatibilitu vašeho zařízení s WebGPU"
+  }
+}

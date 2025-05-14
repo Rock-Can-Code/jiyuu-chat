@@ -1,0 +1,18 @@
+{
+  "HomePage": {
+    "about": "前往关于页面",
+    "reload": "尝试重新加载页面",
+    "status": "状态",
+    "go": "开始！",
+    "copied": "已复制！",
+    "copy_code": "复制代码",
+    "type_your_message_here": "在此输入你的消息..."
+  },
+  "AboutPage": {
+    "about": "关于 Jiyuu Chat",
+    "description": "完全本地运行的 AI 聊天，基于 WebLLM。无需服务器，只有你和你的浏览器。如果想了解更多，请查看以下链接。",
+    "github": "GitHub 仓库",
+    "rock": "Rock Can Code Web",
+    "check": "检查你的设备是否支持 WebGPU"
+  }
+}

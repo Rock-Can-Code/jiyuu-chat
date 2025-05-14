@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://jiyuu.chat
+
+# Sitemaps
+Sitemap: https://jiyuu.chat/sitemap.xml
