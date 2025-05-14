@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { BadgeInfo, Github, Globe, ExternalLink } from 'lucide-react';
 import { gsap } from 'gsap';
+import { useTranslations } from 'next-intl';
 
 interface InfoButtonProps {
   isInfoVisible: boolean;
@@ -8,6 +9,7 @@ interface InfoButtonProps {
 }
 
 export const InfoButton: React.FC<InfoButtonProps> = ({ isInfoVisible, toggleInfo }) => {
+  const t = useTranslations('AboutPage');
   const infoRef = useRef(null);
   const githubIconRef = useRef<SVGSVGElement | null>(null);
   const rccIconRef = useRef<SVGSVGElement | null>(null);
@@ -88,9 +90,9 @@ export const InfoButton: React.FC<InfoButtonProps> = ({ isInfoVisible, toggleInf
         >
           &times;
         </button>
-        <h2 className="text-xl font-bold mb-4">About Jiyuu Chat</h2>
+        <h2 className="text-xl font-bold mb-4">{t('about')}</h2>
         <p ref={infoTextRef} className="mb-2">
-          Fully local AI chat powered by WebLLM. No servers, just you and your browser. Checkout these links if you want to know more about it.
+          {t('description')}
         </p>
         <div className="flex items-center">
           <a
@@ -107,7 +109,7 @@ export const InfoButton: React.FC<InfoButtonProps> = ({ isInfoVisible, toggleInf
             rel="noopener noreferrer"
             className="text-gray-500"
           >
-            GitHub Repository
+            {t("github")}
           </a>
         </div>
         <div className="flex items-center mt-2">
@@ -125,7 +127,7 @@ export const InfoButton: React.FC<InfoButtonProps> = ({ isInfoVisible, toggleInf
             rel="noopener noreferrer"
             className="text-gray-500"
           >
-            Rock Can Code Web
+            {t("rock")}
           </a>
         </div>
         <a
@@ -135,7 +137,7 @@ export const InfoButton: React.FC<InfoButtonProps> = ({ isInfoVisible, toggleInf
           className="flex items-center mt-2 text-gray-500 hover:text-gray-700"
         >
           <ExternalLink className="w-4 h-4 mr-2" />
-          Check your device for WebGPU compatibility
+          {t("check")}
         </a>
       </div>
     </>

@@ -12,8 +12,9 @@ import remarkRehype from 'remark-rehype';
 import rehypeReact, { Components } from 'rehype-react';
 import { jsx, Fragment, jsxs } from 'react/jsx-runtime';
 import { gsap } from 'gsap';
-import { InfoButton } from './components/InfoButton';
-import { WelcomeMessage } from './components/WelcomeMessage';
+import { InfoButton } from '../components/InfoButton';
+import { WelcomeMessage } from '../components/WelcomeMessage';
+import { useTranslations } from 'next-intl';
 
 interface FormInputs {
   message: string;
@@ -125,6 +126,7 @@ function renderMarkdown(markdown: string): React.ReactNode {
 }
 
 function App() {
+  const t = useTranslations('HomePage');
   const [isResponding, setIsResponding] = useState(false);
   const [engine, setEngine] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
@@ -296,18 +298,18 @@ function App() {
             <div className="p-3 text-center text-sm text-[var(--color-text)] border border-[var(--color-button-border-out)] bg-[var(--color-button-background-in)] rounded-md shadow-sm max-w-md mx-auto">
               <p>{loadError}</p>
               <div className="mt-4 flex flex-col items-center text-sm bg-[var(--color-button-background-in)]">
-                <p>Try to reload the page</p>
+                <p>{t('reload')}</p>
                 <RotateCcw onClick={() => window.location.reload()} className="cursor-pointer mt-2" />
               </div>
             </div>
           ) : loadingProgress ? (
             <div className="p-4 text-center text-sm text-[var(--color-text)]">
-              <p>Status: {loadingProgress.text}</p>
+              <p>{t('status')}: {loadingProgress.text}</p>
             </div>
           ) : (
             showReadyMessage && (
               <div className="p-4 text-center text-lg text-[var(--color-text)] transition-opacity duration-1000 opacity-100">
-                <p>Go!</p>
+                <p>{t('go')}</p>
               </div>
             )
           )}
@@ -344,7 +346,7 @@ function App() {
                               <button
                                 onClick={() => handleCopy(code, i)}
                                 className="absolute top-2 right-2 flex items-center gap-1 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer px-2 py-1 transition-colors"
-                                title={isCopied ? 'Copied!' : 'Copy code'}
+                                title={isCopied ? t('copied') : t("copy_code")}
                               >
                                 {isCopied ? (
                                   <Check size={14} className="text-green-400" />
@@ -352,7 +354,7 @@ function App() {
                                   <Copy size={14} className="text-gray-300" />
                                 )}
                                 <span className="text-xs text-gray-300">
-                                  {isCopied ? 'Copied!' : 'Copy'}
+                                  {isCopied ? t('copied') : t("copy_code")}
                                 </span>
                               </button>
                               <SyntaxHighlighter
@@ -395,7 +397,7 @@ function App() {
                   validate: (value) => value.trim().length > 0
                 })}
                 className="w-full px-4 py-3 rounded-lg border-[var(--color-button-border-in)] text-[var(--color-text)] bg-[var(--color-button-background-in)] focus:ring-2 focus:ring-[var(--color-button-border-primary-in)] focus:border-transparent resize-none h-[100px] transition duration-200 ease-in-out"
-                placeholder="Type your message here..."
+                placeholder={t('type_your_message_here')}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
