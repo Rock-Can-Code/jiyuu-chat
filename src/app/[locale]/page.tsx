@@ -314,7 +314,7 @@ function App() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--color-background)] text-[var(--color-text)]">
       <div className="w-full max-w-4xl rounded-xl overflow-hidden">
         <InfoButton isInfoVisible={isInfoVisible} toggleInfo={toggleInfo} />
-        <div className="absolute top-4 right-16">
+        <div className="absolute top-4 right-16 language-selector" style={{ zIndex: 1000 }}>
           <select
             value={locale}
             onChange={(e) => handleLanguageChange(e.target.value)}
