@@ -1,0 +1,18 @@
+{
+  "HomePage": {
+    "about": "Zur Info-Seite",
+    "reload": "Versuche, die Seite neu zu laden",
+    "status": "Status",
+    "go": "Los!",
+    "copied": "Kopiert!",
+    "copy_code": "Code kopieren",
+    "type_your_message_here": "Gib hier deine Nachricht ein..."
+  },
+  "AboutPage": {
+    "about": "Über Jiyuu Chat",
+    "description": "Vollständig lokaler KI-Chat mit WebLLM. Keine Server, nur du und dein Browser. Sieh dir diese Links an, wenn du mehr erfahren möchtest.",
+    "github": "GitHub-Repository",
+    "rock": "Rock Can Code Web",
+    "check": "Prüfe die WebGPU-Kompatibilität deines Geräts"
+  }
+}
