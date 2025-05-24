@@ -164,6 +164,13 @@ function App() {
   };
 
   const clearChat = () => {
+    if (engine) {
+      engine.interruptGenerate();
+      if(isResponding){
+        engine.interruptGenerate();
+      }
+      engine.resetChat();
+    }
     messageRefs.current.forEach((messageRef, index) => {
       if (messageRef) {
         gsap.to(messageRef, {
