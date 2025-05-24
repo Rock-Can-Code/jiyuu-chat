@@ -2,7 +2,7 @@
 
 :root {
   /* Light mode colors */
-  --color-background: #DEDEDE;
+  --color-background: #f3f3f3
   --color-menu-background: #E8E8E8;
   --color-submenu-background: #CFCFCF;
   --color-text: #131313;
@@ -12,7 +12,7 @@
   --color-user-bubble: #666666;
 
   --color-button-border-in: #4B4B4B;
-  --color-button-background-in: #CFCFCF;
+  --color-button-background-in: #cfcfcf;
   --color-button-icon-in: #4B4B4B;
 
   --color-button-border-primary-in: #000000;
@@ -30,7 +30,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Dark mode colors */
-    --color-background: #212121;
+    --color-background: #202020;
     --color-menu-background: #171717;
     --color-submenu-background: #303030;
     --color-text: #ECECEC;
